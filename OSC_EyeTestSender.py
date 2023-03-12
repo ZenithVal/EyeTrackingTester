@@ -6,37 +6,58 @@ from pythonosc import udp_client
 PORT = 9000
 IP = "127.0.0.1"
 
-def sendData():
-  
-  LeftBlink = random.random()
-  # RightBlink = random.random()
+def functionLoop():
 
-  if LeftBlink > 0.1:
-    LeftBlink = 1.0
-    RightBlink = 1.0
-  else:
-    LeftBlink = 0.0
-    RightBlink = 0.0
+  Random = random.random()
 
-  DirectionalRandom = random.random()
-  X = 0.0
-  Y = 0.0
-  
-  if DirectionalRandom > .75:    # Up
-    X = 0.0
-    Y = 1.0
-  elif DirectionalRandom > .50:  # Down
-    X = 0.0
-    Y = -1.0
-  elif DirectionalRandom > .25:   # Left
-    X = -1.0
-    Y = 0.0
-  else:                     # Right
-    X = 0.0
-    Y = 1.0
+  print("Forward")
+  sendData(0.0,
+           0.0,
+           Random,
+           Random)
+  time.sleep(0.5)
 
+  print("Up")
+  sendData(0.0,
+           1.0,
+           1.0,
+           1.0)
+  time.sleep(0.5)
 
-  print(f"Sending information:\n\tX: {X}\n\tY: {Y}\n\tLeftEyeLid: {LeftBlink}\n\tRightEyeLid: {RightBlink}")
+  print("Down")
+  sendData(0.0,
+           -1.0,
+           1.0,
+           1.0)
+  time.sleep(0.5)
+
+  print("Left")
+  sendData(1.0,
+           0.0,
+           1.0,
+           1.0)
+  time.sleep(0.5)
+
+  print("Right")
+  sendData(-1.0,
+           0.0,
+           1.0,
+           1.0)
+  time.sleep(0.5)
+
+  print("Blink")
+  sendData(0.0,
+           0.0,
+           0.0,
+           0.0)
+  time.sleep(0.35)
+
+def sendData(X,Y,LeftBlink,RightBlink):
+
+  print(f"\tEyeX: {X}")
+  print(f"\tEyeY: {Y}")
+  print(f"\tLeftEyeLid: {LeftBlink}")
+  print(f"\tRightEyeLid: {RightBlink}")
 
   client.send_message("/avatar/parameters/LeftEyeX", X)
   client.send_message("/avatar/parameters/LeftEyeY", Y)
@@ -46,13 +67,9 @@ def sendData():
   client.send_message("/avatar/parameters/LeftEyeLid", LeftBlink)
   client.send_message("/avatar/parameters/RightEyeLid", RightBlink)
 
-  print("")
-
-  time.sleep(0.5)
-
 if __name__ == "__main__":
 
   client = udp_client.SimpleUDPClient(IP, PORT)
 
   for x in range(10000):
-    sendData()
+    functionLoop()
